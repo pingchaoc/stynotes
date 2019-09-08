@@ -1,0 +1,178 @@
+Git 
+工作区 ： 写代码
+暂存区 ： 临时存储
+本地库 ： 存储历史版本
+
+git add File_name
+git commit -m "对提交内容的描述"
+
+3.6 Git 和 Github
+	代码托管中心：维护远程库
+局域网： Gitlab
+外网  ： Github 和 码云
+
+3.7 本地库 和 远程库
+1，团队内部合作
+	PM：岳不群
+	a,先创建本地库
+	b,在GitHub创建远程库
+	c,Git push 将本地库推送到远程库
+	A：令狐冲
+	a,Git clone 下载远程库
+	b,直接推送需要加入团队
+	c,PM pull拉取到本地库
+2，团队之间合作
+	Third : 东方不败
+	a,fork 原来的远程库
+	b,修改并push到fork过的远程库
+	c,发起一个pull request（拉取请求）
+	d,审核无误后进行merge（合并操作）
+	e,其他开发者从远程库拉取
+
+3.8 Git 命令行操作
+	本地库
+		初始化 ： git init 就是将本地库（.git）建出来
+				   .git存放本地库相关的子目录和文件，不能删除和胡乱修改
+				   
+4.2 设置签名
+	用户名 ： Tom
+	Email地址： goodMorning@atguigu.commit
+	作用： 区分开发人员的身份
+	辨析： GitHub账密和git中签名没有任何关系
+	命令： 
+		a,项目级别（仓库）-》仅在当前目录下有效
+			git config user.name tom_pro
+			git config user.email goodMorning_pro@atguigu.com
+				cat .git/config 可以看到设置的文件
+				
+		b,系统用户级别-》登录当前操作系统的用户范围
+			git config --global user.name tom_glb
+			git config --global user.email goodMorning_glb@atguigu.com
+		优先级 ： 就近原则， 项目级别 > 系统用户级别，两者都存在，则以项目级别为准
+							 二者都没有是不允许的。
+				cat ~/.gitconfig : 在home目录下		
+
+4.3 查看状态
+	git status : git是主命令，status是子命令，可以加参数
+	git add Name ：将Name文件添加到暂存区，是绿色
+		git rm --cached Name : 将Name文件扔出暂存区
+		
+	git commit -m "添加到版本库" [file name]
+		（vim：set nu 显示行号）
+		 root-commit 第一次提交就是跟提交
+		已经track后的文件：
+			可以直接git commit -m " "
+
+4.4 版本前进后退
+	git log : 打印日志信息（最完整的形式），多屏显示，空格向下翻页，b向上，q退出
+	git log --pretty=oneline : 每条日志只显示一行
+	git log --oneline : 哈希值只显示一部分
+	git reflog : 给出移动步数 HEAD@{5} 移动的步数
+
+	HEAD 指针，方便移动
+	
+4.5 前进后退版本
+	git reflog
+	（linux选中就复制）
+	git reset --hard [版本号]
+	
+	使用^符号：只能后退
+	git reset --hard HEAD^ ：一个一步，n个n步
+	git reset --hard HEAD^^:
+	
+	使用~符号：只能后退
+	git reset --hard HEAD~3: 后退3步
+
+4.6 reset三个参数
+	--soft  : 仅仅在本地库移动HEAD指针
+	--mixed ：移动HEAD指针，重置暂存区
+	--hard  ：移动HEAD指针，重置暂存区，重置工作区
+	
+4.7 删除文件并返回
+	前提：删除前，文件存在时的状态提交到了本地库
+		git reset --hard [指针位置]
+	删除文件对应的记录是不会丢失的，只要倒退到没有删除文件的版本，就可以恢复被删除文件
+
+4.8 比较文件差异（git以行为单位进行管理）
+	git diff [文件名] ：将工作区中文件与暂存区进行比较
+	git diff [本地库中历史版本] [文件名] ： git diff HEAD^ [file name]
+	git diff ：不带文件名，可以比较多个文件
+	
+4.9 分支管理
+	master 主干
+		features 功能分支
+	hot_fix 热修复分支
+	
+	git branch [name] : 创建新分支
+	git branch -v : 查看分支
+	git checkout [branch name] : 切换到其他分支
+	
+	合并分支：
+		a,切换到接受修改的分支 git checkout [被合并分支名]
+		b,git merge [hot_fix] 
+	冲突处理：
+			<<<<<<<<HEAD  ：当前分支内容
+			========
+			>>>>>>>>master : 被合并分支的内容
+			解决方法： 将重复内容修改，去重
+				解决之后,git add [文件名] ，git commit -m :此处不能带文件名
+					解决冲突之后，git commit -m "" : 后面不能加文件名
+5.0 Hash算法简介
+	明文-> 加密算法->密文，MD5
+	Git底层采用SHA-1算法
+	（可以用于校验文件），在服务器端HASH一个值，在下载后的目标文件HASH一个值
+
+5.1 保存版本的机制
+	SVN 增量式版本控制
+	Git 快照流，比特币类似
+
+5.2 管理分支
+	root commit ->a->b
+	
+6 Git和Github 交互
+	git remote -v : 查看远程库
+	git remote add [远程库名：一般是origin] [远程库url] : 
+	
+	git push origin master : 推送，也是默认地址和分支
+	
+	git clone :
+		a,下载远程库
+		b,创建origin远程地址别名
+		c,初始化本地库
+	
+	邀请团队成员：
+		a,选中仓库
+		b,选中Settings
+		c,Collaborators，输入对方github账号
+		d，接受要求
+		（win10的凭据管理器）
+	
+	pull = fetch（只是读操作） + merge
+		git fetch [远程库地址] [远程分支名] : 只是将远程库下载下来，没有修改版本库
+		git mergin [远程库地址名/远程分支名] : 合并
+		
+		fetch + merge : 比较保险
+		pull ：比较简洁
+
+	冲突：
+		1，如果不是基于GitHub远程库的最新版做的修改，不能推送，必须先拉取下来
+		
+	fork -> pull request :
+		forked from XXX
+		太平洋底下的光缆
+		1，本地修改->推送到远程
+		2，发起pull request,点击Pull request，右上角New pull request
+		3，填写说明信息
+		（双方可以对话，在pull request）
+		审核代码，Merge pull request,此处也需要填写日志信息
+	
+	ssh:可以避免每次都登录
+		
+		
+
+
+
+	
+	
+	
+	
